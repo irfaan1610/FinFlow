@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = "https://finflow-vpm9.onrender.com/api";
 
 async function apiFetch(endpoint, options = {}) {
     const token = localStorage.getItem("token");
