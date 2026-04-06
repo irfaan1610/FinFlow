@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinFlow — Records</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+      <div>
+        <div class="sidebar-brand-name">FinFlow</div>
+        <div class="sidebar-brand-tagline">Finance Manager</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-label">Main</span>
+      <a href="dashboard.html" class="nav-item">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span class="nav-text">Dashboard</span>
+      </a>
+      <a href="records.html" class="nav-item active">
+        <i class="fa-solid fa-receipt"></i>
+        <span class="nav-text">Records</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">U</div>
+        <div>
+          <div class="user-name">My Account</div>
+          <div class="user-role" id="sidebarRole">—</div>
+        </div>
+      </div>
+      <button class="nav-item w-100 mt-2" onclick="logout()" style="color:var(--danger); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; transition:all 0.2s;" onmouseover="this.style.background='var(--danger-dim)'" onmouseout="this.style.background='none'">
+        <i class="fa-solid fa-right-from-bracket" style="width:18px; text-align:center;"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <div class="topbar-title">Financial Records</div>
+          <div class="topbar-subtitle">Manage your transactions</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <!-- addBtn ID preserved for records.js -->
+        <button class="btn btn-primary" id="addBtn" style="font-size:12px; padding:8px 16px;">
+          <i class="fa-solid fa-plus"></i>
+          Add Record
+        </button>
+        <button class="btn btn-ghost" onclick="logout()" title="Logout" style="padding:8px 10px;">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-content">
+
+      <!-- ADD RECORD FORM — id="formCard" preserved for records.js toggle -->
+      <div class="form-panel" id="formCard" style="display:none;">
+        <div class="form-panel-title">
+          <i class="fa-solid fa-plus-circle" style="color:var(--primary);"></i>
+          New Transaction
+        </div>
+
+        <!-- id="recordForm" preserved for records.js submit handler -->
+        <form id="recordForm">
+          <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-3">
+              <label class="form-label">Amount</label>
+              <!-- id="amount" preserved -->
+              <input type="number" id="amount" class="form-control" placeholder="0.00" step="0.01" min="0" required />
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3">
+              <label class="form-label">Type</label>
+              <!-- id="type" preserved -->
+              <select id="type" class="form-control">
+                <option value="INCOME">💰 Income</option>
+                <option value="EXPENSE">💸 Expense</option>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3">
+              <label class="form-label">Category</label>
+              <!-- id="category" preserved -->
+              <input type="text" id="category" class="form-control" placeholder="e.g. Salary, Food…" required />
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3">
+              <label class="form-label">Date</label>
+              <!-- id="date" preserved -->
+              <input type="date" id="date" class="form-control" required />
+            </div>
+
+            <div class="col-12 col-md-9">
+              <label class="form-label">Description <span style="color:var(--text-3); font-weight:400;">(optional)</span></label>
+              <!-- id="description" preserved -->
+              <input type="text" id="description" class="form-control" placeholder="Add a note…" />
+            </div>
+
+            <div class="col-12 col-md-3 d-flex align-items-end">
+              <button type="submit" class="btn btn-success w-100">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save Record
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- RECORDS TABLE -->
+      <div class="table-card">
+        <div class="table-card-header">
+          <div>
+            <div class="table-card-title">All Transactions</div>
+            <div style="font-size:12px; color:var(--text-3); margin-top:2px;">Your complete financial history</div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Date</th>
+                <!-- id="actionHeader" preserved for records.js role check -->
+                <th id="actionHeader">Actions</th>
+              </tr>
+            </thead>
+            <!-- id="recordsTable" preserved for records.js -->
+            <tbody id="recordsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  /* ── UI-only scripts ── */
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('open');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('open');
+  }
+
+  /* Role display in sidebar */
+  const _role = localStorage.getItem('role');
+  const _roleEl = document.getElementById('sidebarRole');
+  if (_roleEl && _role) _roleEl.textContent = _role.charAt(0) + _role.slice(1).toLowerCase();
+
+  /* Enhance record rows rendered by records.js */
+  function enhanceRecordRows() {
+    const rows = document.querySelectorAll('#recordsTable tr');
+    rows.forEach(row => {
+      if (row.dataset.enhanced) return;
+      row.dataset.enhanced = '1';
+
+      const cells = row.querySelectorAll('td');
+      if (cells.length < 4) return;
+
+      const amountCell = cells[0];
+      const typeCell   = cells[1];
+      const catCell    = cells[2];
+
+      const typeText = typeCell.textContent.trim().toUpperCase();
+      const isIncome = typeText === 'INCOME';
+      const rawAmt   = parseFloat(amountCell.textContent) || 0;
+
+      amountCell.innerHTML = `<span class="${isIncome ? 'amount-income' : 'amount-expense'}">${isIncome ? '+' : '-'}&nbsp;$${rawAmt.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>`;
+
+      typeCell.innerHTML = `<span class="type-badge ${isIncome ? 'income' : 'expense'}">
+        <i class="fa-solid fa-circle" style="font-size:5px;"></i> ${typeText}
+      </span>`;
+
+      catCell.innerHTML = `<span class="category-pill">${catCell.textContent.trim()}</span>`;
+
+      /* Style delete button if present */
+      const actionCell = cells[4];
+      if (actionCell) {
+        const deleteBtn = actionCell.querySelector('button');
+        if (deleteBtn && !deleteBtn.dataset.styled) {
+          deleteBtn.dataset.styled = '1';
+          deleteBtn.className = 'btn btn-danger btn-sm';
+          deleteBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i> Delete`;
+        }
+      }
+    });
+  }
+
+  /* Watch tbody for rows added by records.js */
+  document.addEventListener('DOMContentLoaded', () => {
+    const tbody = document.getElementById('recordsTable');
+    if (tbody) {
+      const obs = new MutationObserver(enhanceRecordRows);
+      obs.observe(tbody, { childList: true, subtree: true });
+    }
+  });
+</script>
+<script src="js/records.js"></script>
+</body>
+</html>

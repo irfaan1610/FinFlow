@@ -1,0 +1,10 @@
+com\project\finance\service\RecordServicePropertyTest$FilterScenario.class
+com\project\finance\security\JwtUtilPropertyTest.class
+com\project\finance\exception\GlobalExceptionHandlerPropertyTest.class
+com\project\finance\service\AuthServicePropertyTest.class
+com\project\finance\controller\RbacPropertyTest$Endpoint.class
+com\project\finance\service\RecordServicePropertyTest.class
+com\project\finance\controller\RbacPropertyTest.class
+com\project\finance\service\DashboardServicePropertyTest.class
+com\project\finance\service\UserServicePropertyTest.class
+com\project\finance\FinanceDashboardApplicationTests.class
